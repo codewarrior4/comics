@@ -4,8 +4,10 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { Root } from "native-base";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import Login from './src/screens/Auth/Login';
-import Log from './src/screens/Auth/Log';
+import Register from './src/screens/Auth/Register';
+import ForgetPassword from './src/screens/Auth/ForgetPassword';
 
 
 // import {Tabs,Stacks} from './src/screens/Utils/Tabs'
@@ -23,10 +25,27 @@ const App = () => {
   return (
     <Root style={backgroundStyle}>
       <NavigationContainer>
-        <RootStack.Navigator initialRouteName = "Log">
+        <RootStack.Navigator
+          
+        initialRouteName = "Login">
 
           <RootStack.Screen name="Login" options={{headerShown:false}} component={Login} />
-          <RootStack.Screen name="Log" options={{headerShown:false}} component={Log} />
+          <RootStack.Screen name="Register" options={{
+            title:'',
+            headerTintColor:'white',
+            headerStyle:{
+              backgroundColor:'#aa0012',
+            }
+          }} component={Register} />
+          <RootStack.Screen
+            options={{
+              title:'',
+              headerTintColor:'white',
+              headerStyle:{
+                backgroundColor:'#aa0012',
+              }
+            }}
+          name="ForgetPassword" component={ForgetPassword} />
 
         </RootStack.Navigator>
       </NavigationContainer>
