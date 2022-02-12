@@ -76,7 +76,9 @@ const [data,setData]=useState({email:'','password':''})
                         alignItems:'center'
                     }}
                 >
-                    <Button rounded style={Auth.loginBtn}>
+                    <Button rounded style={Auth.loginBtn}
+                        onPress={()=>{navigation.navigate('Main')}}
+                    >
                         <Text>Login</Text>
                     </Button>
                 </View>
