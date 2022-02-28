@@ -31,7 +31,7 @@ export default function AppRoot() {
   if(checking){
     return (
       <View style={styles.container}>
-          <ActivityIndicator />
+          <ActivityIndicator size={'large'} color={'#FF6464'} />
       </View>
     )
   }

@@ -1,11 +1,48 @@
 import { Dimensions, ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
-import { Container,Header,Body,Title, Text, Button,Item,Input,Icon, Label, ListItem, CheckBox } from 'native-base';
+import { Container,Header,Body,Title, Text, Button,Item,Input,Icon, Label, ListItem, CheckBox, Toast } from 'native-base';
 import React,{useState} from 'react';
 import {Auth}  from '../styles/Auth';
+import axios from 'axios';
+import {APP_API} from '@env'
+import { AuthContext } from './../../../provider/AuthProvider';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+
 
 export default function Log({navigation}) {
-const [data,setData]=useState({email:'','password':''})
+    const [email,setEmail] = useState('')
+    const [password,setPassword] = useState('')
+    const {setUser,setIsLoggedIn}= React.useContext(AuthContext)
+    const {setItem} = useAsyncStorage('@user')
 
+    const Login = () =>{
+        if(email=='' || password==''){
+           Toast.show({
+                text: 'Fields Cannot Appear Empty',
+                type:'primary',
+                duration:3000,
+                buttonText:'okay'
+            }) 
+        } else {
+            axios.post(`http://192.168.0.145:8000/api/user/login`,{
+                email,
+                password
+            }).then(res=>{
+                setIsLoggedIn(true)
+                setItem(res.data.user.token)
+                setUser(res.data.user)
+            }).catch((err)=>{
+                let error =err.response.data.error
+                Toast.show({
+                    text: err.response.data.error,
+                    type:'danger',
+                    duration:3000,
+                })
+            })
+            setEmail('')
+            setPassword('')
+        }
+        
+    }
   return (
     <ScrollView
         style={{flex:1,backgroundColor:"#fff",}}
@@ -31,6 +68,7 @@ const [data,setData]=useState({email:'','password':''})
                 <Text style={Auth.welcome}>Welcome Back</Text>
                 <Text>Don't have an account ?
                     <Text style={Auth.subText}
+                        
                         onPress={()=>{navigation.navigate('Register')}}
                     >Register now</Text>
                 </Text>
@@ -40,7 +78,9 @@ const [data,setData]=useState({email:'','password':''})
                         <Label>Email</Label>
                         <Input 
                          keyboardType='email-address'
-                        
+                         value={email}
+                         onChangeText={(value) =>setEmail(value)}
+                         
                          />
                     </Item>
                     <Item floatingLabel style={{borderColor:'red',marginTop:20}}>
@@ -48,6 +88,8 @@ const [data,setData]=useState({email:'','password':''})
                         <Label>Password</Label>
                         <Input 
                             secureTextEntry={true}
+                            value={password}
+                            onChangeText={(value) =>setPassword(value)}
                          />
                     </Item>
                 </View>
@@ -77,7 +119,7 @@ const [data,setData]=useState({email:'','password':''})
                     }}
                 >
                     <Button rounded style={Auth.loginBtn}
-                        onPress={()=>{navigation.navigate('Main')}}
+                        onPress={()=>{Login()}}
                     >
                         <Text>Login</Text>
                     </Button>
